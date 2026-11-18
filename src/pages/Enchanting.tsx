@@ -7,6 +7,7 @@ import { ageText, fmt, pct } from '../lib/format';
 import { usePersisted, useSettings } from '../lib/settings';
 import { getPrices } from '../lib/store';
 import { Chip, Fresh, ItemIcon, toggle } from '../components/bits';
+import { HistoryToggle } from '../components/PriceHistory';
 
 const MAX_REQUESTS = 150;
 const ITEM_CATS = ['weapons', 'armors', 'head', 'shoes', 'capes', 'offhands', 'bags'];
@@ -271,6 +272,7 @@ function EnchRow({ o, names, isOpen, onToggle }: { o: EnchOpp; names: Map<string
               </div>
             )}
             <span className="muted small">{o.base} · ruta calculada hasta .{o.kind === 'item' ? MAX_ITEM_LEVEL : 4} · {encId(o.base, o.to, o.kind)}</span>
+            <HistoryToggle id={o.dstId} quality={1} cities={[o.sellCity]} title={`Historial de ${o.dstId} (el ítem ya encantado)`} />
           </div>
         </td></tr>
       )}

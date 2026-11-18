@@ -8,6 +8,7 @@ import { ageText, fmt, pct } from '../lib/format';
 import { computeOpps, levelOf, type Opp } from '../lib/market';
 import { useSettings } from '../lib/settings';
 import { Chip, Fresh, ItemIcon, toggle } from '../components/bits';
+import { HistoryToggle } from '../components/PriceHistory';
 
 const MAX_REQUESTS = 150;
 const DEFAULT_CATS = ['weapons', 'armors', 'head', 'shoes', 'capes', 'offhands', 'bags', 'mounts', 'consumables', 'crafting', 'artefacts'];
@@ -279,6 +280,7 @@ function Detail({ o }: { o: Opp }) {
         {err && <span className="err">{err}</span>}
         <span className="muted small id">{o.id}</span>
       </div>
+      <HistoryToggle id={o.id} quality={o.q} cities={[o.from, o.to]} />
     </div>
   );
 }

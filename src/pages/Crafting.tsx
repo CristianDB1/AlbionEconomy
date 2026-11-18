@@ -8,6 +8,7 @@ import {
 import { ageText, fmt, pct } from '../lib/format';
 import { usePersisted, useSettings } from '../lib/settings';
 import { Chip, Fresh, ItemIcon, toggle } from '../components/bits';
+import { HistoryToggle } from '../components/PriceHistory';
 
 const MAX_REQUESTS = 150;
 const CRAFT_CATS = ['weapons', 'armors', 'head', 'shoes', 'capes', 'offhands', 'bags', 'mounts', 'consumables'];
@@ -319,6 +320,7 @@ function CraftRow({ o, names, showFocus, rrr, isOpen, onToggle }: {
               </tbody>
             </table>
             <span className="muted small">* Los artefactos y similares no devuelven recursos. Foco de la receta: {fmt(o.recipe.focus)} · {o.id}</span>
+            <HistoryToggle id={o.id} quality={1} cities={[o.sellCity]} title="Historial del ítem terminado" />
           </div>
         </td></tr>
       )}

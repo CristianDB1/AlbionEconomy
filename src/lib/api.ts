@@ -95,9 +95,14 @@ export async function fetchPrices(
   return out;
 }
 
-export function fetchHistory(server: ServerKey, id: string, cities: string[], quality: number, signal?: AbortSignal) {
+const histCache = new Map<string, { t: number; rows: HistoryRow[] }>();
+export async function fetchHistory(server: ServerKey, id: string, cities: string[], quality: number, signal?: AbortSignal) {
   const url = `${HOSTS[server]}/api/v2/stats/history/${id}.json?locations=${encodeURIComponent(cities.join(','))}&qualities=${quality}&time-scale=24`;
-  return getJson<HistoryRow[]>(url, signal);
+  const hit = histCache.get(url);
+  if (hit && Date.now() - hit.t < 10 * 60_000) return hit.rows;
+  const rows = await getJson<HistoryRow[]>(url, signal);
+  histCache.set(url, { t: Date.now(), rows });
+  return rows;
 }
 
 export const iconUrl = (id: string, quality = 1, size = 64) =>

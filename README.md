@@ -21,7 +21,7 @@ npm run catalog    # regenera public/data/*.json desde ao-bin-dumps (tras un par
 
 ## Actualización automática de precios
 
-La API de Albion Data limita a **100 peticiones/min y 300 cada 5 min por IP**, así que la web no la consulta al abrirse. Un workflow de GitHub Actions (`.github/workflows/update.yml`, cada ~10 min) ejecuta `scripts/fetch-prices.mjs`, que baja los precios y los publica como archivos estáticos en `data/prices/`:
+La API de Albion Data limita a **100 peticiones/min y 300 cada 5 min por IP**, así que la web no la consulta al abrirse. Un workflow de GitHub Actions (`.github/workflows/update.yml`, cada ~15 min) ejecuta `scripts/fetch-prices.mjs`, que baja los precios y los publica como archivos estáticos en `data/prices/`:
 
 - **Corrida rápida** (cada vez): ítems T4–T8 sin encantar + ingredientes de sus recetas → ~19 peticiones.
 - **Con encantados** (cada ~30 min): T4–T8 con cualquier encantamiento → ~59 peticiones.

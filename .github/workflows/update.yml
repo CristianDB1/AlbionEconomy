@@ -2,7 +2,7 @@ name: Actualizar precios y publicar
 
 on:
   schedule:
-    - cron: '*/10 * * * *'   # GitHub puede retrasarlo varios minutos
+    - cron: '7,22,37,52 * * * *'   # cada ~15 min en minutos poco transitados; GitHub puede retrasarlo
   workflow_dispatch:
     inputs:
       full:
