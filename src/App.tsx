@@ -4,12 +4,13 @@ import { taxRate, useSettings, type ServerKey } from './lib/settings';
 import { pct } from './lib/format';
 import Flipping from './pages/Flipping';
 import Crafting from './pages/Crafting';
+import Enchanting from './pages/Enchanting';
 
 const TABS = [
   { id: 'flip', label: 'Flipping', ready: true },
   { id: 'craft', label: 'Crafteo', ready: true },
   { id: 'refine', label: 'Refinado', ready: true },
-  { id: 'transmute', label: 'Transmutación', ready: false },
+  { id: 'transmute', label: 'Transmutación', ready: true },
 ];
 
 export default function App() {
@@ -77,6 +78,7 @@ export default function App() {
         {tab === 'flip' && <Flipping />}
         {tab === 'craft' && <Crafting key="craft" mode="craft" />}
         {tab === 'refine' && <Crafting key="refine" mode="refine" />}
+        {tab === 'transmute' && <Enchanting />}
       </main>
       <footer className="foot">
         Datos de la comunidad vía <a href="https://www.albion-online-data.com" target="_blank" rel="noreferrer">Albion Online Data Project</a> · imágenes © Sandbox Interactive · No afiliado a Albion Online.

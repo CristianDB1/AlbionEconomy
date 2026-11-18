@@ -138,3 +138,6 @@ td.fresh { color: var(--good); } td.warn { color: var(--warn); } td.stale { colo
 .mini tr.tot b { color: var(--text); }
 .inl.chk { flex-direction: row; align-items: center; gap: 6px; align-self: end; padding-bottom: 8px; }
 .field > .inl { max-width: 340px; }
+
+.modeseg { margin: 10px 0 8px; }
+.modeseg button { padding: 7px 14px; }

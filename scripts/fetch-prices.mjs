@@ -19,6 +19,7 @@ const HOST = { west: 'west', east: 'east', europe: 'europe' }[SERVER] || 'west';
 const BASE = process.env.API_BASE || `https://${HOST}.albion-online-data.com`;
 const PREV = (process.env.PREV_BASE || '').replace(/\/$/, '');
 const FULL_EVERY = (+process.env.FULL_EVERY_MIN || 90) * 60_000;
+const WARM_EVERY = (+process.env.WARM_EVERY_MIN || 30) * 60_000;
 const CITIES = ['Caerleon', 'Bridgewatch', 'Fort Sterling', 'Lymhurst', 'Martlock', 'Thetford', 'Brecilien', 'Black Market'];
 const SKIP = new Set(['vanity', 'other', 'furniture']);
 const HOT_CATS = new Set(['weapons', 'armors', 'head', 'shoes', 'capes', 'offhands', 'bags', 'mounts', 'consumables', 'crafting', 'artefacts', 'gathering']);
@@ -39,6 +40,7 @@ async function getPrev(name) {
 const prevMeta = (await getPrev('meta.json')) || { fullAt: 0, cats: {} };
 const now = Date.now();
 const doFull = process.env.FORCE_FULL === '1' || now - (prevMeta.fullAt || 0) > FULL_EVERY;
+const doWarm = !doFull && now - (prevMeta.warmAt || 0) > WARM_EVERY;
 
 // Conjuntos de ids
 const hot = new Set();
@@ -48,10 +50,13 @@ for (const i of catalog) {
     for (const [rid] of recipes[i.id]?.[0]?.res ?? []) hot.add(rid);
   }
 }
+// Tibio: T4-T8 con cualquier encantamiento (necesario para transmutación/encantamiento)
+const warm = new Set(hot);
+for (const i of catalog) if (!SKIP.has(i.c) && i.t >= 4 && i.t <= 8 && HOT_CATS.has(i.c)) warm.add(i.id);
 const full = new Set(catalog.filter((i) => !SKIP.has(i.c)).map((i) => i.id));
 for (const id of hot) full.add(id);
-const ids = [...(doFull ? full : hot)].sort();
-console.log(`${doFull ? 'Barrido completo' : 'Corrida rápida'}: ${ids.length} ítems, ${Math.ceil(ids.length / BATCH)} peticiones (${SERVER})`);
+const ids = [...(doFull ? full : doWarm ? warm : hot)].sort();
+console.log(`${doFull ? 'Barrido completo' : doWarm ? 'Corrida con encantados' : 'Corrida rápida'}: ${ids.length} ítems, ${Math.ceil(ids.length / BATCH)} peticiones (${SERVER})`);
 
 // --- Limitador (100/min y 300/5 min por IP; usamos margen) ---
 const starts = [];
@@ -142,6 +147,6 @@ for (const c of Object.keys(prevMeta.cats || {})) {
 }
 writeFileSync(join(out, 'meta.json'), JSON.stringify({
   server: SERVER, cities: CITIES, updatedAt: Math.floor(now / 1000),
-  fullAt: doFull ? now : prevMeta.fullAt || 0, cats: metaCats,
+  fullAt: doFull ? now : prevMeta.fullAt || 0, warmAt: doFull || doWarm ? now : prevMeta.warmAt || 0, cats: metaCats,
 }));
 console.log(`Listo: ${rows.length} filas, ${failed} lotes fallidos.`);
